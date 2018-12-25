@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing</title>
+    <script>
+        let txtArr;
+        let randomStart;
+
+        /*
+        function onloadContent() {
+            let xmlhttp;
+            if(window.XMLHttpRequest) {
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                xmlhttp = new ActiveXObject(Microsoft.XMLHTTP);
+            }
+            
+            xmlhttp.open("GET", "file:///Users/will/Documents/apps/jh/dummy.txt", false);
+
+            xmlhttp.onreadystatechange = function() {
+                if(this.readyState === 4 && (this.status === 200 || this.status === 0)){
+                    txtArr = (this.responseText).split('\n');
+                    console.log(txtArr);                                        
+                }
+            }
+            xmlhttp.send(null);
+        };
+        */
+        
+        function randomTxt() {
+            clearInterval(randomStart);
+            
+            randomStart = setInterval(() => {
+                const idx = Math.floor(Math.random() * Math.floor(txtArr.length));
+                document.getElementById("content").innerHTML = txtArr[idx];
+            }, 1000);
+        };
+        
+        
+        function readTextFile(file) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function ()
+            {
+                if(rawFile.readyState === 4)
+                {
+                    if(rawFile.status === 200 || rawFile.status == 0)
+                    {
+                        var allText = rawFile.responseText;
+                        alert(allText);
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+        
+        
+        window.onload = readTextFile("https://crossorigin.me/"+window.location.pathname+"/dummy.txt");
+    </script>
+</head>
+<body>
+    <button type="button" onclick="">AJAX Content</button>
+    <div id="content"></div>
+</body>
+</html>

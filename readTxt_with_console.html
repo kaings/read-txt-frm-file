@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing</title>
+    <script>
+        let txtArr;
+        let start;
+
+        function readFile(mode) {
+            const files = document.getElementById('file').files;
+            
+            console.log(files);
+            
+            const reader = new FileReader();
+            
+            const blobpart = files[0].slice(0, files[0].size - 1);
+            const readBlobPart = reader.readAsBinaryString(blobpart);
+            /*
+            readBlobPart will return 'undefined'. To get the value of readAsBinaryString, the value will be passed upon
+            onloadstart or onload or onloadend as below. for more details (check the browser support as well):
+            1) https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsBinaryString
+            2) https://stackoverflow.com/questions/31391207/javascript-readasbinarystring-function-on-e11
+            3) https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onloadend
+            */
+            
+            console.log('blobpart..... ', blobpart);
+            console.log('blobpart readAsBinary..... ', readBlobPart);
+
+            /* onload works as well. But, onloadstart does NOT work */
+            reader.onloadstart = function(val) {
+                console.log('onloadstart..... ', val.target.result);
+                txtArr = val.target.result.split('\n');
+                console.log('txtArr..... ', txtArr);
+                
+                readTxt(mode);
+            };
+        }
+        
+        function readTxt(mode) {
+            clearInterval(start);
+            
+            if (mode==='random') {
+                
+                start = setInterval(() => {
+                   const idx = Math.floor(Math.random() * Math.floor(txtArr.length));
+                   document.getElementById("content").innerHTML = txtArr[idx];
+                }, 1000); 
+            } else if (mode==='random') {
+                let idx = 0;
+                
+                start = setInterval(() => {
+                    document.getElementById("content").innerHTML = txtArr[idx];
+                    console.log('loop..... ', idx, txtArr[idx]);
+                    
+                    idx = idx + 1;
+                    if (idx >= txtArr.length) {
+                        idx = 0;
+                    };
+                }, 1000); 
+            }   
+        };
+        
+    </script>
+</head>
+<body>
+    <input type="file" id="file" name="file"/>
+    <br>
+    <button type="button" onclick="readFile('random')">Random Txt</button>
+    <button type="button" onclick="readFile('loop')">Loop Txt</button>
+
+    <div id="content"></div>
+</body>
+</html>
